@@ -11,9 +11,11 @@ Assignment #2's requirements
 
 */
 
+-- Drops to avoid duplicates
 DROP TABLE IF EXISTS users;
 DROP SEQUENCE IF EXISTS user_id_seq;
 
+-- Creation script
 CREATE SEQUENCE user_id_seq START 100900000;
 CREATE TABLE users (
     user_id INT PRIMARY KEY DEFAULT nextval('user_id_seq'),
@@ -23,5 +25,8 @@ CREATE TABLE users (
     birth_date DATE,
     created_at DATE,
     last_access DATETIME,
-    password VARCHAR(255)
+    password VARCHAR(60)
 );
+
+-- Grants access to the professor
+GRANT ALL ON users TO faculty;
