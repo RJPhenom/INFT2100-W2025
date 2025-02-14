@@ -24,7 +24,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     birth_date DATE,
     created_at DATE,
-    last_access DATETIME,
+    last_access TIMESTAMP,
     password VARCHAR(60)
 );
 

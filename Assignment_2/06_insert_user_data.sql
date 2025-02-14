@@ -35,7 +35,7 @@ INSERT INTO users (
         '2025-02-05',
         '2025-02-05 18:29:42',
         crypt('myPassword1$', gen_salt('bf'))
-    )
+    ),
 
     -- These values generated via ChatGPT
     ('John', 'Doe', 'john.doe@dcmail.ca', '1987-02-12', '2025-01-30', '2025-01-30 14:15:22', crypt('password123', gen_salt('bf'))),
@@ -81,7 +81,7 @@ INSERT INTO users (
     ('Jaden', 'Phillips', 'jaden.phillips@dcmail.ca', '1992-03-19', '2025-02-06', '2025-02-06 21:18:23', crypt('jaden2025@phillips', gen_salt('bf'))),
     ('Sophie', 'Bennett', 'sophie.bennett@dcmail.ca', '1987-05-09', '2025-01-16', '2025-01-16 18:39:42', crypt('sophieBennett1', gen_salt('bf'))),
     ('Aaron', 'Moore', 'aaron.moore@dcmail.ca', '1994-12-28', '2025-02-03', '2025-02-03 19:22:34', crypt('aaronMoore#1', gen_salt('bf'))),
-    ('Cameron', 'Morgan', 'cameron.morgan@dcmail.ca', '1990-11-07', '2025-01-19', '2025-01-19 08:47:10', crypt('cameronM2025', gen_salt('bf')))
+    ('Cameron', 'Morgan', 'cameron.morgan@dcmail.ca', '1990-11-07', '2025-01-19', '2025-01-19 08:47:10', crypt('cameronM2025', gen_salt('bf'))),
     ('Samuel', 'Cameron', 'samuel.cameron@dcmail.ca', '1992-06-15', '2025-01-18', '2025-01-18 13:27:56', crypt('samuel2025#', gen_salt('bf'))),
     ('Aiden', 'Brooks', 'aiden.brooks@dcmail.ca', '1995-01-24', '2025-01-26', '2025-01-26 15:18:43', crypt('aiden@brooks1', gen_salt('bf'))),
     ('Ella', 'Diaz', 'ella.diaz@dcmail.ca', '1998-03-12', '2025-01-28', '2025-01-28 09:52:30', crypt('ella2025Diaz', gen_salt('bf'))),

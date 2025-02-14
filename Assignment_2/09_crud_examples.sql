@@ -34,7 +34,7 @@ INSERT INTO users (
         '2025-02-11',
         '2025-02-11 23:29:42',
         crypt('gregOrreysPassword1$', gen_salt('bf'))
-    )
+    ),
     (
         'Bamboo',
         'Pandaman',
@@ -43,7 +43,7 @@ INSERT INTO users (
         '2025-02-11',
         '2025-02-11 23:30:52',
         crypt('pandasRule1!', gen_salt('bf'))
-    )
+    ),
     (
         'Geralt',
         'OfRivia',
@@ -101,9 +101,14 @@ WHERE first_name = 'Geralt' AND last_name = 'OfRivia'
 
 -- INSERT into courses
 INSERT INTO courses (
+    course_code,
+    course_description
+    )
+
+    VALUES (
     'ABCD1234',
     'Its as easy as 123'
-)
+    )
 ;
 
 -- SELECT students with marks >80
