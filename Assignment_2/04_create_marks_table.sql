@@ -18,7 +18,8 @@ DROP TABLE IF EXISTS marks;
 CREATE TABLE marks (
     student_id INT NOT NULL, 
     course_code CHAR(8) NOT NULL, 
-    final_mark INT CHECK (final_mark BETWEEN 0 AND 100) -- and a check constraint to bind data to 0-100
+    final_mark INT CHECK (final_mark BETWEEN 0 AND 100), -- and a check constraint to bind data to 0-100
+    achieved_at DATETIME NOT NULL
 
     -- keys
     FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
