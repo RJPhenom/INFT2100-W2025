@@ -293,10 +293,10 @@ return $last_student + 1;
 function get_posted_student_id()
 {
     // Check if student id is set
-    if (isset($_POST['student_id']))
+    if (isset($_POST['user_id']))
     {
         // If it is, return the value thats set
-        return $_POST['student_id'];
+        return $_POST['user_id'];
     }
 
     else 
@@ -328,4 +328,86 @@ function retrieve_password($db_connection, $student)
     // Run and return first row
     $password_lookup = pg_execute($db_connection, "password_lookup");
     return pg_fetch_result($password_lookup, 0, "password");
+}
+
+/**
+ * Validates the input string is not empty and less than 257 characters.
+ * 
+ * @param Input the string to validate
+ * 
+ * @return Valid true if valid, false otherwise.
+ */
+function is_valid_name_input($input)
+{
+    // Min len = 2 because no names are 1 char (max len set by create script in lab 2)
+    $name = trim($input);
+    return strlen($name) > 1 && strlen($name) < 256
+}
+
+/**
+ * Validates the input string is not empty and less than 257 characters.
+ * Also validates it as an email address.
+ * 
+ * @param Input the string to validate
+ * 
+ * @return Valid returns the date if it is a date, false otherwise.
+ */
+function is_valid_email_input($input)
+{
+    $email = trim($input);
+
+    // Min len 6 becausa of a@b.c = 5 (max len set by create script in lab 2)
+    $valid = strlen($email) > 5 && strlen($email) < 256;
+    $valid = ($valid) ? filter_var($email, FILTER_VALIDATE_EMAIL) : false;
+
+    return $valid;
+}
+
+/**
+ * Validates the input string is an acceptable birth date.
+ * 
+ * @param Input the string to validate
+ * 
+ * @return DOB returns the formatted DOB for psql if valid, false otherwise.
+ */
+function is_valid_birth_date_input($input)
+{
+    $birth_date = trim($input);
+
+    // Unsure about min len, but not a requirement per assignment sheet
+    $valid = strlen($email) > 0 && strlen($email) < 256;
+    $valid = ($valid) ? strtotime($input) : false;
+    $valid = ($valid) ? date("Y-m-d", $valid) : false;
+
+    return $valid;
+}
+
+/**
+ * Validates the input string is an acceptable password.
+ * 
+ * @param Input the string to validate
+ * 
+ * @return Valid returns true if valid, false otherwise.
+ */
+function is_valid_password_input($input)
+{
+    $password = trim($input);
+
+    // Min len 6, this was arbitrary (max len set by create script in lab 2)
+    $valid = strlen($email) > 5 && strlen($email) < 61;
+
+    return $valid;
+}
+
+/**
+ * Writes a message to activity.log 
+ * 
+ * @param Message the message to log
+ */
+function log($message)
+{
+    // Make handle, write, close (per slides)
+    $handle = fopen("../logs/activity.log", 'a');
+    fwrite($handle, date("Y-m-d H:i:s")." - ".$message."\n");
+    fclose($handle);
 }

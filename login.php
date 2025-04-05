@@ -32,7 +32,7 @@ if (isset($_COOKIE["LOGIN_COOKIE"]))
 
 // ------------POST------------
 // Check for postmode
-$post_mode = isset($_POST["student_id"]);
+$post_mode = isset($_POST["user_id"]);
 
 // Error message container (if anything fails)
 $error_message = "";
@@ -47,7 +47,7 @@ if ($post_mode)
     // We now need the db, and to trim the input. Also declare 
     // pwd verified in outer scope for readability and access
     $database = db_connect();
-    $student = trim($_POST["student_id"]);
+    $student = trim($_POST["user_id"]);
     $password = trim($_POST["password"]);
 
     // Check student id exists
@@ -79,15 +79,28 @@ if ($post_mode)
 
             // Update last access
             update_last_access($database, $student);
+
+            
+            // Log (in my functions.php)
+            log("Login Attempt (SUCCESS): ".$_SESSION["user_id"]);
+
+            // Redirect to grades page
+            header("Location: ./grades.php");
         }
 
         else {
             $error_message = "Login unsuccessful: Invalid password.";
+        
+            // Log (in my functions.php)
+            log("Login Attempt (FAILED): ".$_SESSION["user_id"]."Error reason: Invalid password");
         }
     }
 
     else {
         $error_message = "Login unsuccessful: Invalid Student ID.";
+        
+        // Log (in my functions.php)
+        log("Login Attempt (FAILED): ".$_SESSION["user_id"]."Error reason: Invalid Student ID");
     }
 }
 // ----------------------------
@@ -98,7 +111,7 @@ if ($post_mode)
         <form action="./login.php" method="post">
             <div><p>Student ID:</p><input type="text" name="student_id" <?php /* input cookie value we grabbed */ echo "value=$stored_user"?>/></div>
             <div><p>Password:</p><input type="password" name="password" /></div>
-            </br>
+            <br>
             <input type="submit" name="Submit" value="Login"/>
             <?php
                 if ($msg !== "") echo "</br><p class=\"text-danger\">$msg</p>";

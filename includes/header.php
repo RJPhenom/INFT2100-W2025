@@ -62,10 +62,6 @@ Description: <?php echo $description . "\n"; ?>
         <?php endif; ?>
 
     </ul>
-    <form class="d-flex align-items-center" action="grades.php" method="GET">
-        <input class="form-control me-2" type="text" name="studentid" placeholder="Student ID" aria-label="Student ID" required>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
     </div>
     </nav>
     

@@ -17,6 +17,9 @@ session_unset();
 session_destroy();
 session_start();
 
+// Log (in my functions.php)
+log("Logout: ".$_SESSION["user_id"]);
+
 // place msg
 $_SESSION['message'] = "You have successfully logged out.";
 header("Location: ./login.php");

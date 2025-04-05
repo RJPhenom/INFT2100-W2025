@@ -28,6 +28,10 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Already logged in message
+$msg = isset($_SESSION['message'])?$_SESSION['message']:"";
+$_SESSION['message'] = "";
+
 ?>
 
 <!-- Body -->
@@ -113,6 +117,11 @@ else
     echo $student;
 }
 ?>
+
+    <?php
+        // Handles if they try to register when logged in
+        if ($msg !== "") echo "</br><p class=\"text-danger\">$msg</p>";
+    ?>
 
 </div>
 
