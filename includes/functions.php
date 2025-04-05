@@ -174,6 +174,8 @@ function update_last_access($db_connection, $user_id)
         SET
             last_access = CURRENT_TIMESTAMP
         WHERE 
+            users.user_id = students.user_id 
+            AND 
             users.user_id = $1'
         );
 
@@ -302,4 +304,28 @@ function get_posted_student_id()
         // Return error string
         return $GLOBALS['NO_STUDENT_PROVIDED'];
     }
+}
+
+/**
+ * Retrieves the password for the input student id.
+ * 
+ * @param Database the database connection to query against.
+ * 
+ * @return Password the password found.
+ */
+function retrieve_password($db_connection, $student) 
+{
+    // Sorted select
+    $password_lookup = pg_prepare($db_connection, "password_lookup", 
+        'SELECT
+            password
+        FROM
+            users
+        ORDER BY
+            last_access DESC'
+        );
+    
+    // Run and return first row
+    $password_lookup = pg_execute($db_connection, "password_lookup");
+    return pg_fetch_result($password_lookup, 0, "password");
 }

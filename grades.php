@@ -47,10 +47,16 @@ if (!($student === $NO_STUDENT_PROVIDED))
     if(!($exists === $NO_STUDENT_FOUND))
     {
         // Set up our heading with student info (add margin: https://getbootstrap.com/docs/4.0/utilities/spacing/)
-        $student_output = "<h1 class='mt-5'>".pg_fetch_result($exists, 0, "first_name")." "; 
-        $student_output .= pg_fetch_result($exists, 0, "last_name")."</h1>"; 
-        $student_output .= "<p class='mt-4'>Program: ".pg_fetch_result($exists, 0, "program_code"); 
-        $student_output .= " | Email: ".pg_fetch_result($exists, 0, "email")."</p>"; 
+        // -----------------------------------------------------
+        // LAB 4 EDTI: user SESSION not the results from $exists
+        // -----------------------------------------------------
+        $student_output = "<h1 class='mt-5'>".$_SESSION["first_name"]." "; 
+        $student_output .= $_SESSION["last_name"]."</h1>"; 
+        $student_output .= "<p class='mt-4'>Program: ".$_SESSION["program_code"]; 
+        $student_output .= " | Email: ".$_SESSION["email"]."</p>"; 
+        $student_output .= "<p class='mt-4'>Enrol Date: ".$_SESSION["created_at"]; 
+        $student_output .= " | Last Access: ".$_SESSION["last_access"]."</p>"; 
+        // -----------------------------------------------------
 
         echo $student_output;
 
