@@ -10,6 +10,11 @@
 * @version 1.0 (March 13, 2025)
 */
 
+// sesh/buffer start
+session_start();
+ob_start();
+
+// require funcs (lab 3 code)
 require("functions.php");
 ?>
 
@@ -40,12 +45,22 @@ Description: <?php echo $description . "\n"; ?>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-        <a class="nav-link" href="index.php">Home</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="grades.php">Grades</a>
-        </li>
+        <?php if (isset($_SESSION['user'])): ?>
+            <li class="nav-item">
+            <a class="nav-link" href="grades.php">Dashboard</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="logout.php">Logout</a>
+            </li>
+        <?php else: ?>
+            <li class="nav-item">
+            <a class="nav-link" href="login.php">Login</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="register.php">Register</a>
+            </li>
+        <?php endif; ?>
+
     </ul>
     <form class="d-flex align-items-center" action="grades.php" method="GET">
         <input class="form-control me-2" type="text" name="studentid" placeholder="Student ID" aria-label="Student ID" required>

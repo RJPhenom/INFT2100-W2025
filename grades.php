@@ -20,6 +20,14 @@ $table_built = FALSE;
 
 // Header
 include("./includes/header.php");
+
+// Redirect to login page if student isnt signed in (check in the SESSION global)
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['message'] = "You must log in to access your grades.";
+    header("Location: login.php");
+    exit();
+}
+
 ?>
 
 <!-- Body -->
@@ -29,7 +37,7 @@ include("./includes/header.php");
 <?php
 // Build the body.
 // First confirm we have a valid student
-$student = get_student_id();
+$student = get_posted_student_id(); // changed to check POST (wrote a new func for it)
 if (!($student === $NO_STUDENT_PROVIDED))
 {
     // Next confirm student exists
