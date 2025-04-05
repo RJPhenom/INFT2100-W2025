@@ -37,6 +37,11 @@ $post_mode = isset($_POST["student_id"]);
 // Error message container (if anything fails)
 $error_message = "";
 
+// Logout message
+$msg = isset($_SESSION['message'])?$_SESSION['message']:"";
+$_SESSION['message'] = "";
+
+
 if ($post_mode)
 {
     // We now need the db, and to trim the input. Also declare 
@@ -95,6 +100,9 @@ if ($post_mode)
             <div><p>Password:</p><input type="password" name="password" /></div>
             </br>
             <input type="submit" name="Submit" value="Login"/>
+            <?php
+                if ($msg !== "") echo "</br><p class=\"text-danger\">$msg</p>";
+            ?>
             <?php
                 if ($error_message !== "") echo "</br><p class=\"text-danger\">$error_message</p>";
             ?>
