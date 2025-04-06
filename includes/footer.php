@@ -11,12 +11,10 @@
 */
 ?>
     </main>
-    <footer class="bg-dark text-center p-5 mt-auto">
+    <footer class="bg-dark text-center text-white p-5 mt-auto">
         <div class="container">
-            <p>
-                <a class="nav-link" href="aup.php">Acceptable Use Policy</a> | 
+                <a class="nav-link" href="aup.php">Acceptable Use Policy</a>
                 <a class="nav-link" href="privacy_policy.php">Privacy Policy</a>
-            </p>
         </div>
     </footer>
   </body>

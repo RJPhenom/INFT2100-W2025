@@ -196,31 +196,23 @@ function insert_new_registration($db_connection,
     $email,
     $birth_date,
     $password,
-    $program
+    $program_code
 )
 {
     // Users insert stmt
     $insert_user = pg_prepare($db_connection, "insert_user_registration", 
         'INSERT INTO
-            users
+            users (first_name, last_name, email, birth_date, created_at, last_access, password)
         VALUES
-            first_name = $1,
-            last_name = $2,
-            email = $3,
-            birth_date = $4,
-            created_at = CURRENT_DATE,
-            last_access = CURRENT_TIMESTAMP,
-            password = $5'
+            ($1, $2, $3, $4, CURRENT_DATE, CURRENT_TIMESTAMP, $5)'
         );
 
     // Students insert stmt
-    $insert_student = pg_prepare($db_connection, "insert_user_registration", 
+    $insert_student = pg_prepare($db_connection, "insert_student_registration", 
         'INSERT INTO
-            students
+            students (student_id, user_id, program_code)
         VALUES
-            student_id = $1
-            user_id = $2
-            program = $3'
+            ($1, $2, $3)'
         );
 
     // Run user insert
@@ -231,7 +223,7 @@ function insert_new_registration($db_connection,
     $student_id = get_next_student_id($db_connection);
 
     // Run student insert
-    $insert_student = pg_execute($db_connection, "insert_user_registration", array($student_id, $user_id, $program));
+    $insert_student = pg_execute($db_connection, "insert_student_registration", array($student_id, $user_id, $program_code));
 }
 
 /**
@@ -255,7 +247,7 @@ function retrieve_latest_user($db_connection)
         );
     
     // Run and return first row
-    $latest_user = pg_execute($db_connection, "latest_user");
+    $latest_user = pg_execute($db_connection, "latest_user", array());
     return pg_fetch_result($latest_user, 0, "user_id");
 }
 
@@ -280,7 +272,7 @@ function get_next_student_id($db_connection)
     );
 
 // Run and return first row + 1
-$last_student = pg_execute($db_connection, "last_student");
+$last_student = pg_execute($db_connection, "last_student", array());
 $last_student = pg_fetch_result($last_student, 0, "student_id");
 
 return $last_student + 1;
@@ -290,13 +282,13 @@ return $last_student + 1;
  * Gets the student id from $_POST
  * @return Student student, if set, otherwise an error string.
  */
-function get_posted_student_id()
+function get_session_student_id()
 {
     // Check if student id is set
-    if (isset($_POST['user_id']))
+    if (isset($_SESSION['user_id']))
     {
         // If it is, return the value thats set
-        return $_POST['user_id'];
+        return $_SESSION['user_id'];
     }
 
     else 
@@ -321,12 +313,12 @@ function retrieve_password($db_connection, $student)
             password
         FROM
             users
-        ORDER BY
-            last_access DESC'
+        WHERE
+            user_id = $1'
         );
     
     // Run and return first row
-    $password_lookup = pg_execute($db_connection, "password_lookup");
+    $password_lookup = pg_execute($db_connection, "password_lookup", array($student));
     return pg_fetch_result($password_lookup, 0, "password");
 }
 
@@ -339,9 +331,11 @@ function retrieve_password($db_connection, $student)
  */
 function is_valid_name_input($input)
 {
+    if ($input == null) return false;
+
     // Min len = 2 because no names are 1 char (max len set by create script in lab 2)
     $name = trim($input);
-    return strlen($name) > 1 && strlen($name) < 256
+    return strlen($name) > 1 && strlen($name) < 256;
 }
 
 /**
@@ -354,6 +348,8 @@ function is_valid_name_input($input)
  */
 function is_valid_email_input($input)
 {
+    if ($input == null) return false;
+
     $email = trim($input);
 
     // Min len 6 becausa of a@b.c = 5 (max len set by create script in lab 2)
@@ -372,10 +368,12 @@ function is_valid_email_input($input)
  */
 function is_valid_birth_date_input($input)
 {
+    if ($input == null) return false;
+
     $birth_date = trim($input);
 
     // Unsure about min len, but not a requirement per assignment sheet
-    $valid = strlen($email) > 0 && strlen($email) < 256;
+    $valid = strlen($birth_date) > 0 && strlen($birth_date) < 256;
     $valid = ($valid) ? strtotime($input) : false;
     $valid = ($valid) ? date("Y-m-d", $valid) : false;
 
@@ -391,10 +389,12 @@ function is_valid_birth_date_input($input)
  */
 function is_valid_password_input($input)
 {
+    if ($input == null) return false;
+
     $password = trim($input);
 
     // Min len 6, this was arbitrary (max len set by create script in lab 2)
-    $valid = strlen($email) > 5 && strlen($email) < 61;
+    $valid = strlen($password) > 5 && strlen($password) < 61;
 
     return $valid;
 }
@@ -404,10 +404,24 @@ function is_valid_password_input($input)
  * 
  * @param Message the message to log
  */
-function log($message)
+function log_activity($message)
 {
     // Make handle, write, close (per slides)
-    $handle = fopen("../logs/activity.log", 'a');
+    $handle = fopen("./logs/activity.log", 'a');
     fwrite($handle, date("Y-m-d H:i:s")." - ".$message."\n");
     fclose($handle);
+}
+
+/**
+ * Checks if the input is an int
+ * 
+ * @param The id to validate
+ * 
+ * @return true if valid, false otherwise
+ */
+function validate_student_id($input)
+{
+    // use filter like EMAIL in slides, but for int (so there isnt an error when
+    // user inputs some word as their ID like 'bob')
+    return filter_var($input, FILTER_VALIDATE_INT) !== false;
 }

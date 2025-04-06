@@ -45,7 +45,7 @@ Description: <?php echo $description . "\n"; ?>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-        <?php if (isset($_SESSION['user'])): ?>
+        <?php if (isset($_SESSION['user_id'])): ?>
             <li class="nav-item">
             <a class="nav-link" href="grades.php">Dashboard</a>
             </li>

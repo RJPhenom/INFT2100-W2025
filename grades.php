@@ -25,6 +25,7 @@ include("./includes/header.php");
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['message'] = "You must log in to access your grades.";
     header("Location: login.php");
+    ob_flush();
     exit();
 }
 
@@ -41,7 +42,7 @@ $_SESSION['message'] = "";
 <?php
 // Build the body.
 // First confirm we have a valid student
-$student = get_posted_student_id(); // changed to check POST (wrote a new func for it)
+$student = get_session_student_id(); // changed to check what was POSTed to SESSION (wrote a new func for it)
 if (!($student === $NO_STUDENT_PROVIDED))
 {
     // Next confirm student exists

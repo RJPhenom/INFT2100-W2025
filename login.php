@@ -41,7 +41,6 @@ $error_message = "";
 $msg = isset($_SESSION['message'])?$_SESSION['message']:"";
 $_SESSION['message'] = "";
 
-
 if ($post_mode)
 {
     // We now need the db, and to trim the input. Also declare 
@@ -49,9 +48,13 @@ if ($post_mode)
     $database = db_connect();
     $student = trim($_POST["user_id"]);
     $password = trim($_POST["password"]);
+    $exists = false;
 
     // Check student id exists
-    $exists = !(student_exists($database, $student) === $NO_STUDENT_FOUND);
+    if (validate_student_id($student))
+    {
+        $exists = !(student_exists($database, $student) === $NO_STUDENT_FOUND);
+    }
 
     // If exists
     if ($exists) {
@@ -70,29 +73,27 @@ if ($post_mode)
             // Set sesh
             $_SESSION["user_id"] = $student;
             $_SESSION["student_id"] = pg_fetch_result($student_info, 0, "student_id");
-            $_SESSION["first_name"] = pg_fetch_result($student_info, 0, "users.first_name");
-            $_SESSION["last_name"] = pg_fetch_result($student_info, 0, "users.last_name");
-            $_SESSION["email"] = pg_fetch_result($student_info, 0, "users.email");
-            $_SESSION["created_at"] = pg_fetch_result($student_info, 0, "users.created_at");
-            $_SESSION["last_access"] = pg_fetch_result($student_info, 0, "users.last_access");
-            $_SESSION["program_code"] = pg_fetch_result($student_info, 0, "students.program_code");
+            $_SESSION["first_name"] = pg_fetch_result($student_info, 0, "first_name");
+            $_SESSION["last_name"] = pg_fetch_result($student_info, 0, "last_name");
+            $_SESSION["email"] = pg_fetch_result($student_info, 0, "email");
+            $_SESSION["created_at"] = pg_fetch_result($student_info, 0, "created_at");
+            $_SESSION["last_access"] = pg_fetch_result($student_info, 0, "last_access");
+            $_SESSION["program_code"] = pg_fetch_result($student_info, 0, "program_code");
 
             // Update last access
             update_last_access($database, $student);
-
             
-            // Log (in my functions.php)
-            log("Login Attempt (SUCCESS): ".$_SESSION["user_id"]);
-
-            // Redirect to grades page
+            // Log (in my functions.php) and redirect
+            log_activity("Login Attempt (SUCCESS): ".$_SESSION["user_id"]);
             header("Location: ./grades.php");
+            ob_flush();
         }
 
         else {
             $error_message = "Login unsuccessful: Invalid password.";
         
             // Log (in my functions.php)
-            log("Login Attempt (FAILED): ".$_SESSION["user_id"]."Error reason: Invalid password");
+            log_activity("Login Attempt (FAILED): ".$_POST["user_id"]." Error reason: Invalid password");
         }
     }
 
@@ -100,26 +101,33 @@ if ($post_mode)
         $error_message = "Login unsuccessful: Invalid Student ID.";
         
         // Log (in my functions.php)
-        log("Login Attempt (FAILED): ".$_SESSION["user_id"]."Error reason: Invalid Student ID");
+        log_activity("Login Attempt (FAILED): ".$_POST["user_id"]." Error reason: Invalid Student ID");
     }
 }
+
 // ----------------------------
 ?>
 
 <!-- Body -->
     <div class="starter-template">
         <form action="./login.php" method="post">
-            <div><p>Student ID:</p><input type="text" name="student_id" <?php /* input cookie value we grabbed */ echo "value=$stored_user"?>/></div>
-            <div><p>Password:</p><input type="password" name="password" /></div>
+            <div><p>Student ID:</p><input type="text" name="user_id" <?php /* input cookie value we grabbed */ if ($stored_user != "") echo "value=$stored_user"?>></div>
+            <div><p>Password:</p><input type="password" name="password"></div>
             <br>
             <input type="submit" name="Submit" value="Login"/>
-            <?php
-                if ($msg !== "") echo "</br><p class=\"text-danger\">$msg</p>";
-            ?>
-            <?php
-                if ($error_message !== "") echo "</br><p class=\"text-danger\">$error_message</p>";
-            ?>
         </form>
+        <?php
+            if ($msg != "") 
+            {
+                echo $msg;
+            }
+        ?>
+        <?php
+            if ($error_message != "") 
+            {
+                echo $error_message;
+            }
+        ?>
     </div>
 
 <?php
