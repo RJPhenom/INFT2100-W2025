@@ -25,11 +25,9 @@ include("./includes/header.php");
 // ----------LAB 4------------
 // Log (in my functions.php)
 log_activity("Logout: ".$_SESSION["user_id"]);
-
 session_unset();
 session_destroy();
 session_start();
-
 // place msg
 $_SESSION['message'] = "You have successfully logged out.";
 header("Location: ./login.php");
