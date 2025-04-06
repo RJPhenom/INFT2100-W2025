@@ -23,20 +23,24 @@ include("./includes/header.php");
 // ----------COOKIE------------
 // Declare cookie holder
 $stored_user =  "";
+
 // Check for cookie
 if (isset($_COOKIE["LOGIN_COOKIE"]))
 {
     $stored_user = $_COOKIE["LOGIN_COOKIE"];
 }
+
 // ------------POST------------
 // Check for postmode
 $post_mode = isset($_POST["user_id"]);
+
 // Error message container (if anything fails)
 $error_message = "";
+
 // Logout message
 $msg = isset($_SESSION['message'])?$_SESSION['message']:"";
 $_SESSION['message'] = "";
-//
+
 if ($post_mode)
 {
     // We now need the db, and to trim the input. Also declare 
@@ -45,22 +49,27 @@ if ($post_mode)
     $student = trim($_POST["user_id"]);
     $password = trim($_POST["password"]);
     $exists = false;
+
     // Check student id exists
     if (validate_student_id($student))
     {
         $exists = !(student_exists($database, $student) === $NO_STUDENT_FOUND);
     }
+
     // If exists
     if ($exists) {
         //Get the password from db (in functions.php) and verify
         // if password is valid and if so run sesh and updates
         $stored_password = retrieve_password($database, $student);
         $verified = password_verify($password, $stored_password);
+
         if ($verified) {
             // Retrieve info from db
             $student_info = retrieve_student($database, $student);
+
             // set cookie
             setcookie("LOGIN_COOKIE", $student, time() + 60*60*24*30);
+
             // Set sesh
             $_SESSION["user_id"] = $student;
             $_SESSION["student_id"] = pg_fetch_result($student_info, 0, "student_id");
@@ -70,8 +79,10 @@ if ($post_mode)
             $_SESSION["created_at"] = pg_fetch_result($student_info, 0, "created_at");
             $_SESSION["last_access"] = pg_fetch_result($student_info, 0, "last_access");
             $_SESSION["program_code"] = pg_fetch_result($student_info, 0, "program_code");
+
             // Update last access
             update_last_access($database, $student);
+            
             // Log (in my functions.php) and redirect
             log_activity("Login Attempt (SUCCESS): ".$_SESSION["user_id"]);
             header("Location: ./grades.php");
