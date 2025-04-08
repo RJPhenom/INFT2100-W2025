@@ -21,6 +21,9 @@ $table_built = FALSE;
 // Header
 include("./includes/header.php");
 
+// Debug logging
+// log_activity("Debug: grades page hit! | PHP Version: " . phpversion() . " | Error Log: " . print_r(error_get_last(), true));
+
 // Redirect to login page if student isnt signed in (check in the SESSION global)
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['message'] = "You must log in to access your grades.";

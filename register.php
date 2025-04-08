@@ -16,6 +16,9 @@ $banner = "Students Grade Portal";
 
 // Header
 include("./includes/header.php");
+
+// Debug
+// log_activity("Debug: register page hit! | PHP Version: " . phpversion() . " | Error Log: " . print_r(error_get_last(), true));
 ?>
 
 <?php

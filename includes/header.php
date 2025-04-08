@@ -9,7 +9,6 @@
 * @author RJ Macklem <robert.macklem@dcmail.ca>
 * @version 1.0 (March 13, 2025)
 */
-
 // sesh/buffer start
 session_start();
 ob_start();
@@ -66,4 +65,3 @@ Description: <?php echo $description . "\n"; ?>
     </nav>
     
     <main class="container d-flex flex-column justify-content-center align-items-center min-vh-100">
-        
